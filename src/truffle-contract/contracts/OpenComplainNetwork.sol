@@ -73,7 +73,7 @@ contract OpenComplainNetwork {
         return complainCounter-1;
     }
 
-    function viewComplain(uint cid) public pure returns (uint, uint, uint, uint, uint, string memory, Status) {
+    function viewComplain(uint cid) public  returns (uint, uint, uint, uint, uint, string memory, Status) {
         return (cid, complainMap[cid]._reward, complainMap[cid]._long, complainMap[cid]._lat, complainMap[cid]._category, complainMap[cid]._data, complainMap[cid]._status);
     }
     
@@ -97,25 +97,28 @@ contract OpenComplainNetwork {
         transferFundOnResolve(cid);
     }
     
-    function declineProposal(uint cid) public view complainOwnerAccess(cid) {
+    function declineProposal(uint cid) public  complainOwnerAccess(cid) {
         require( complainMap[cid]._status == Status.Proposed );
         complainMap[cid]._status = Status.Accepted;
         
-        complainSolver[cid] = 0;
+        complainSolver[cid] = address(0);
     }
     
     // If someone other than police solved the complain transfer funds to solver.
     // Otherwise send them back to the contributors.
     function transferFundOnResolve(uint cid) private {
         // Could also be used: complainMap[cid]._status == Status.Resolved && 
+        address payable complain_payable  ;
         if(complainMap[cid]._reward > 0) {
             if(policeAccounts[complainSolver[cid]] != true) {
-                complainSolver[cid].transfer( complainMap[cid]._reward );
+                complain_payable=address(uint160(complainSolver[cid]));
+                complain_payable.transfer( complainMap[cid]._reward );
                 complainMap[cid]._reward = 0;
             }
             else {
                 for(uint i=0; i<complainMap[cid]._contributors.length; i++) {
-                    complainMap[cid]._contributors[i].transfer( complainMap[cid]._contAmount[i] );
+                    complain_payable=address(uint160(complainMap[cid]._contributors[i]));
+                    complain_payable.transfer( complainMap[cid]._contAmount[i] );
                 }
                 complainMap[cid]._reward = 0;
                 
@@ -143,11 +146,11 @@ contract OpenComplainNetwork {
         complainSolver[cid] = msg.sender;
     }
     
-    function checkFund() public pure returns(uint) {
-        return this.balance;
+    function checkFund() public  returns(uint) {
+        return address(this).balance;
     }
     
-    function checkIfPoliceAccount(address pid) public pure returns(bool) {
+    function checkIfPoliceAccount(address pid) public  returns(bool) {
         return policeAccounts[pid];
     }
     

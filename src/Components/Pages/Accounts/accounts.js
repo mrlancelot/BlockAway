@@ -41,7 +41,7 @@ class Accounts extends Component {
 			for(var i = 0; i<context.accounts.length; i++) {
 				pro.push(context.web3.eth.getBalance(context.accounts[i]))
 			}
-			for(var i = 0; i<context.accounts.length; i++) {
+			for( i = 0; i<context.accounts.length; i++) {
 				pro[i].then(function(res) {
 					console.log(res)
 					this.balances.push(res)
