@@ -53,8 +53,8 @@ class Register extends Component {
             }
         }
         function showPosition(position) {
-            latdata = parseInt(position.coords.latitude * 1e12)
-            longdata = parseInt(position.coords.longitude * 1e12) 
+            latdata = parseInt(position.coords.latitude * 1e12, 10)
+            longdata = parseInt(position.coords.longitude * 1e12, 10) 
         }
 
         getLocation()
@@ -72,7 +72,7 @@ class Register extends Component {
 
         var catdata = $('#type').val()
 
-        var reward = parseInt($('#input-reward').val()) * 1e9
+        var reward = parseInt($('#input-reward').val(), 10) * 1e9
 
         /*let objJsonStr = JSON.stringify(data);
         let objJsonB64 = new Buffer(objJsonStr).toString("base64");*/

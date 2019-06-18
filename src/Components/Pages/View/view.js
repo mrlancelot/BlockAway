@@ -52,20 +52,20 @@ class View extends Component {
 
 	catType(a) {
         console.log('dfdsfsdf'+ a)
-        if(a==0)
+        if(a===0)
             return 'Lost'
-        else if(a==1)
+        else if(a===1)
             return 'Theft'
     }
 
     statusType(a) {
-        if(a == 0)
+        if(a === 0)
             return 'Pending'
-        else if(a == 1)
+        else if(a === 1)
             return 'Accepted'
-        else if(a == 2)
+        else if(a === 2)
             return 'Resolved'
-        else if(a == 3)
+        else if(a === 3)
         	return 'Proposed'
     }
 
@@ -73,10 +73,10 @@ class View extends Component {
     	var complain = this.fetchedComplains[e.target.getAttribute('data-index')]
     	var context = this;
 
-    	if(this.selectUser == 1) {
+    	if(this.selectUser === 1) {
     		console.log('Complain Status: '+complain.status)
     		if(complain.status < 2) {
-    			this.complainContract.methods.changeStatus(complain.cid, parseInt(complain.status) + 1).send({from: this.accounts[this.selectUser]})
+    			this.complainContract.methods.changeStatus(complain.cid, parseInt(complain.status, 10) + 1).send({from: this.accounts[this.selectUser]})
     				.then(function(res) {
     					console.log(res)
     					context.setState({notification: 'Complain Status Changed.', notiClass: 'success'})
@@ -91,13 +91,13 @@ class View extends Component {
     		}
     		
     	}
-    	else if(this.selectUser == 2 || this.selectUser == 3) {
+    	else if(this.selectUser === 2 || this.selectUser === 3) {
     		console.log("Fund : "+complain.cid)
-    		if($('#input-reward').val() == '') {
+    		if($('#input-reward').val() === '') {
     			context.setState({notification: 'No Fund Specified. Please enter some amount.', notiClass: 'danger'})
     			return
     		}
-    		var fundValue = parseInt($('#input-reward').val()) * 1e9
+    		var fundValue = parseInt($('#input-reward').val(), 10) * 1e9
     		this.complainContract.methods.fundComplain(complain.cid).send({from: this.accounts[this.selectUser], value: fundValue})
     				.then(function(res) {
     					console.log(res)
@@ -110,9 +110,9 @@ class View extends Component {
     actionSecondButton(e) {
     	var complain = this.fetchedComplains[e.target.getAttribute('data-index')]
     	var context = this;
-    	if(this.selectUser == 1) {
+    	if(this.selectUser === 1) {
     		if(complain.status > 0) {
-    			this.complainContract.methods.changeStatus(complain.cid, parseInt(complain.status) - 1).send({from: this.accounts[this.selectUser]})
+    			this.complainContract.methods.changeStatus(complain.cid, parseInt(complain.status, 10) - 1).send({from: this.accounts[this.selectUser]})
     				.then(function(res) {
     					console.log(res)
     					context.setState({notification: 'Status Changed', notiClass: 'success'})
@@ -124,7 +124,7 @@ class View extends Component {
     		}
     		
     	}
-    	else if(this.selectUser == 2 || this.selectUser == 3) {
+    	else if(this.selectUser === 2 || this.selectUser === 3) {
     		this.complainContract.methods.claimSolution(complain.cid).send({from: this.accounts[this.selectUser]})
     				.then(function(res) {
     					console.log(res)
@@ -160,7 +160,7 @@ class View extends Component {
     	var complain = this.fetchedComplains[e.target.getAttribute('data-index')]
     	var context = this;
 
-    	var fundValue = parseInt($('#input-reward').val()) * 1e9
+    	var fundValue = parseInt($('#input-reward').val(), 10) * 1e9
 
     	this.complainContract.methods.fundComplain(complain.cid).send({from: this.accounts[this.selectUser], value: fundValue})
 			.then(function(res) {
@@ -229,18 +229,18 @@ class View extends Component {
 	updateUser(e) {
 		this.selectUser = e.target.value
 
-		if(this.selectUser == 0) {
+		if(this.selectUser === 0) {
 
 			this.setState({polFund: 'invisible', secondBtn: 'invisible', isSuperUser: 'visible',isCitizen: 'invisible', classFirst: 'glyphicon glyphicon-plus', classSecond: 'hidden', tipFirst: 'Assign new Police accounts', tipSecond: 'Empty'}, function() {
 	    		this.setState({table: this.renderTable()})
 	    	})
 		}
-		else if(this.selectUser == 1) {
+		else if(this.selectUser === 1) {
 			this.setState({polFund: 'visible', secondBtn: 'visible', isSuperUser: 'invisible',isCitizen: 'invisible', classFirst: 'glyphicon glyphicon-arrow-up', classSecond: 'glyphicon glyphicon-arrow-down', tipFirst: 'Upgrade complain status', tipSecond: 'Downgrade complain status'}, function() {
 	    		this.setState({table: this.renderTable()})
 	    	})
 		}
-		else if(this.selectUser == 2 || this.selectUser == 3) {
+		else if(this.selectUser === 2 || this.selectUser === 3) {
 			this.setState({polFund: 'invisible', secondBtn: 'visible', isSuperUser: 'invisible',isCitizen: 'visible', classFirst: 'glyphicon glyphicon-flash', classSecond: 'glyphicon glyphicon-send', tipFirst: 'Fund a Complain', tipSecond: 'Report a Solution'}, function() {
 	    		this.setState({table: this.renderTable()})
 	    	})
